@@ -1,13 +1,13 @@
 {
   "name": "chess-evaluation-bar",
-  "description": "stockfish 11 evaluation of positons, takes a FEN string as the parameter.",
+  "description": "A browser based Stockfish 11 engine analysis React component. Pass the component a FEN of the position, and the depth of which to search.",
   "author": "trevor-ofarrell",
   "keywords": [
     "react",
     "components",
     "ui"
   ],
-  "version": "0.1.25",
+  "version": "0.1.26",
   "private": false,
   "main": "dist/index.js",
   "module": "dist/index.js",

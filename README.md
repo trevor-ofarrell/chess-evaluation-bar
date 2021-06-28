@@ -1,6 +1,6 @@
 # Chess-Evaluation-Bar
 
-A browser based Stockfish 11 engine analysis React component. Pass the component a FEN of the postion, and the depth of which to search.
+A browser based Stockfish 11 engine analysis React component. Pass the component a FEN of the position, and the depth of which to search.
 
   
   
