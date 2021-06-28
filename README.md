@@ -30,6 +30,7 @@ yarn add chess-evaluation-bar
 ```
 
 how to use in React:
+	//the EvalBar component will be the height of its parent
 
 	import { EvalBar } from "chess-evaluation-bar";
 
@@ -37,7 +38,9 @@ how to use in React:
 	
 	export const eval = () => {
 		return(
-			<EvalBar fen={fen} depth={25}/>
+			<div style={{height: "100vh"}}>
+				<EvalBar fen={fen} depth={25}/>
+			</div>
 		)
 	}
 
