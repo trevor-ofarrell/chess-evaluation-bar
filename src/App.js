@@ -1,5 +1,5 @@
 import "./index.css";
-import { EvalBar } from "./lib/components/EvalBar"
+import EvalBar from "./lib/components/EvalBar";
 
 function App() {
   return (

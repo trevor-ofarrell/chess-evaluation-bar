@@ -6,6 +6,7 @@ const EvalBar = ({fen, depth}) => {
   const [sfEval, setSfEval] = useState("");
   const [wHeight, setWHeight] = useState(50);
   const [listening, setListening] = useState(false);
+  const [FEN, setFEN] = useState(fen);
 
   const onStockfishMsg = (event, fen) => {
     if (event.data.startsWith(`info depth`)) {
@@ -57,23 +58,21 @@ const EvalBar = ({fen, depth}) => {
     }
   };
 
+  useEffect(() => { setFEN(fen) }, [fen]);
   useEffect(() => {
-    if (!listening) {
-      stockfish.terminate();
-        stockfish = new Worker("/stockfish.js");
-        stockfish.postMessage("uci");
-        stockfish.postMessage("ucinewgame");
-        stockfish.postMessage(`position fen ${fen}`);
-        stockfish.postMessage(`go depth ${depth}`);
-        stockfish.onmessage = (event) => {
-          onStockfishMsg(event, fen);
-        };
-      setListening(true);
-    }
-  }, [listening, fen]);
+    stockfish.terminate();
+    stockfish = new Worker("/stockfish.js");
+    stockfish.postMessage("uci");
+    stockfish.postMessage("ucinewgame");
+    stockfish.postMessage(`position fen ${FEN}`);
+    stockfish.postMessage(`go depth ${depth}`);
+    stockfish.onmessage = (event) => {
+      onStockfishMsg(event, FEN);
+    };
+  }, [FEN, depth]);
 
   return (
-    <div className="md:w-10 w-8 h-full mr-1">
+    <div key={100} className="md:w-10 w-8 h-full mr-1">
       <div
         style={{ height: `${100 - wHeight}%` }}
         className="w-full bg-black transition ease-in-out duration-700 text-center"
