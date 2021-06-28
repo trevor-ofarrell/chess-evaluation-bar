@@ -31,6 +31,7 @@ const EvalBar = _ref => {
   const [sfEval, setSfEval] = (0, _react.useState)("");
   const [wHeight, setWHeight] = (0, _react.useState)(50);
   const [listening, setListening] = (0, _react.useState)(false);
+  const [FEN, setFEN] = (0, _react.useState)(fen);
 
   const onStockfishMsg = (event, fen) => {
     if (event.data.startsWith("info depth")) {
@@ -77,22 +78,22 @@ const EvalBar = _ref => {
   };
 
   (0, _react.useEffect)(() => {
-    if (!listening) {
-      stockfish.terminate();
-      stockfish = new Worker("/stockfish.js");
-      stockfish.postMessage("uci");
-      stockfish.postMessage("ucinewgame");
-      stockfish.postMessage("position fen ".concat(fen));
-      stockfish.postMessage("go depth ".concat(depth));
+    setFEN(fen);
+  }, [fen]);
+  (0, _react.useEffect)(() => {
+    stockfish.terminate();
+    stockfish = new Worker("/stockfish.js");
+    stockfish.postMessage("uci");
+    stockfish.postMessage("ucinewgame");
+    stockfish.postMessage("position fen ".concat(FEN));
+    stockfish.postMessage("go depth ".concat(depth));
 
-      stockfish.onmessage = event => {
-        onStockfishMsg(event, fen);
-      };
-
-      setListening(true);
-    }
-  }, [listening, fen]);
+    stockfish.onmessage = event => {
+      onStockfishMsg(event, FEN);
+    };
+  }, [FEN, depth]);
   return /*#__PURE__*/_react.default.createElement("div", {
+    key: 100,
     className: "md:w-10 w-8 h-full mr-1"
   }, /*#__PURE__*/_react.default.createElement("div", {
     style: {
