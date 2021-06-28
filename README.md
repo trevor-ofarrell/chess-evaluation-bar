@@ -7,7 +7,7 @@ A browser based Stockfish 11 engine analysis React component. Pass the component
 
 <p  align="center">
 
-<img  src="/client/public/appdemo.gif"  alt="My Project GIF"  width="auto"  height="auto">
+<img src="https://github.com/trevor-ofarrell/chess-evaluation-bar/blob/main/public/appdemo.gif?raw=true"  alt="My Project GIF"  width="auto"  height="auto">
 
 </p>
 
