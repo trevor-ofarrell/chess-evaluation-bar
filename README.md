@@ -16,9 +16,8 @@ A browser based Stockfish 11 engine analysis React component. Pass the component
 ## About
 
 - Uses stockfish.js for the analysis
-
+- the EvalBar component will be the height of its parent. To set it's height, wrap the EvalBar component in a element with the desired height.
   
-
 ## Usage
 
 ```
@@ -30,7 +29,6 @@ yarn add chess-evaluation-bar
 ```
 
 how to use in React:
-	//the EvalBar component will be the height of its parent
 
 	import { EvalBar } from "chess-evaluation-bar";
 
