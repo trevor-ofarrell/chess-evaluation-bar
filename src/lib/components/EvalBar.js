@@ -1,48 +1,79 @@
 import React, { useState, useEffect } from "react";
+import Chess from "chess.js";
 
 let stockfish = new Worker("/stockfish.js");
 
 const EvalBar = ({fen, depth}) => {
   const [sfEval, setSfEval] = useState("");
   const [wHeight, setWHeight] = useState(50);
-  const [listening, setListening] = useState(false);
   const [FEN, setFEN] = useState(fen);
 
   const onStockfishMsg = (event, fen) => {
-    if (event.data.startsWith(`info depth`)) {
-      let adv;
+    if (event.data.startsWith("info depth")) {
+      let adv, messageEvalType;
       let message = event.data.split(" ");
-      const turn = fen.slice(-1);
+      const chess = new Chess();
+      chess.load(fen);
+      const turn = chess.turn();
+
+      if (message.includes("mate")) {
+        messageEvalType = `M${message[message.indexOf("mate") + 1]}`
+      } else {
+        messageEvalType = message[message.indexOf("cp") + 1]
+      }
 
       let evaluation = convertEvaluation(
-        message[message.indexOf("cp") + 1],
+        messageEvalType,
         turn
       );
 
-      if (evaluation.startsWith("-")) adv = "b";
-      else adv = "w";
-
-      if ((parseFloat(evaluation) / 100).toFixed(1) === 0.0) {
-        evaluation = Math.abs(evaluation);
+      if (evaluation.startsWith('M')) {
+        if (evaluation === "M0") {
+          if (turn === 'b') {
+            setWHeight(100);
+          } else {
+            setWHeight(0);
+          }
+          setSfEval(evaluation.replace('-', '').replace('M', '#'));
+        } else {
+          console.log('mate', evaluation)
+          if (
+            (turn === 'w' && evaluation[1] != '-') ||
+            (turn === 'b' && evaluation[1] === '-')
+          ) {
+            setWHeight(100);
+          } else {
+            setWHeight(0);
+          }
+          setSfEval(evaluation.replace('-', '').replace('M', '#'));
+        }
+      } else {
+        if (evaluation.startsWith('-')) adv = 'b';
+        else adv = 'w';
+  
+        if ((parseFloat(evaluation) / 100).toFixed(1) === 0.0) {
+          evaluation = Math.abs(evaluation);
+        }
+        setSfEval((parseFloat(evaluation) / 100).toFixed(1));
+  
+        evaluation = Math.abs(parseFloat(evaluation) / 100);
+        const evaluated = evaluateFunc(evaluation);
+  
+        if (adv === 'w') setWHeight(50 + evaluated);
+        else setWHeight(50 - evaluated);
       }
-      setSfEval((parseFloat(evaluation) / 100).toFixed(1));
-      console.log(sfEval);
-
-      evaluation = Math.abs(parseFloat(evaluation) / 100);
-      const evaluated = evaluateFunc(evaluation);
-
-      if (adv === "w") setWHeight(50 + evaluated);
-      else setWHeight(50 - evaluated);
     }
   };
 
   const convertEvaluation = (ev, turn) => {
-    console.log("ev", ev, turn);
-    if (turn === "b" && !ev.startsWith("M")) {
-      if (ev.startsWith("-")) {
+    if (ev.startsWith('M')) {
+      ev = `M${ev.substring(1)}`
+    }
+    if (turn === 'b' && !ev.startsWith('M')) {
+      if (ev.startsWith('-')) {
         ev = ev.substring(1);
       } else {
-        ev = ev = `-${ev}`;
+        ev = `-${ev}`;
       }
     }
     return ev;
